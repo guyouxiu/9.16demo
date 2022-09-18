@@ -5,43 +5,58 @@
       <el-input
         placeholder="请输入内容"
         prefix-icon="el-icon-user-solid"
-        v-model="input1"
+        v-model="from.username"
       >
       </el-input>
       <el-input
         placeholder="密码"
         prefix-icon="el-icon-lock"
-        v-model="input2"
+        v-model="from.password"
         show-password
       >
       </el-input>
       <el-button type="primary" @click="login">Login</el-button>
       <el-alert
-          title="密码或者账号错误"
-          type="error"
-          center
-          show-icon
-          v-show="flag"
-        ></el-alert>;
+        title="密码或者账号错误"
+        type="error"
+        center
+        show-icon
+        v-show="flag"
+      ></el-alert
+      >;
     </div>
   </div>
 </template>
 <script>
+import { querylogin } from "../utils/index";
 export default {
   data() {
     return {
-      input1: "",
-      input2: "",
-      flag:false
+      from: {
+        username: "",
+        password: "",
+      },
+      flag: false,
     };
   },
   methods: {
     login() {
-      if (this.input1 == "admin" || this.input2 == "123456") {
-        this.$router.push("/");
-      } else {
-        this.flag=true
-      } 
+      querylogin(this.from).then((res) => {
+        console.log(res.data);
+        if (res.data.code == 20000) {
+          localStorage.setItem("token", res.data.data.token);
+          this.$message({
+            message: "恭喜你登陆成功",
+            type: "success",
+          });
+          this.$router.push("/");
+        }else{
+            this.$message({
+            message: "登陆失败",
+            type: "error",
+          });
+        }
+      });
     },
   },
 };

@@ -8,7 +8,25 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: HomeView
+    component: HomeView,
+    children:[
+      {
+        path: "/list",
+        name: "list",
+        component: () => import('../views/list.vue'),
+      },
+      {
+        path: "/category",
+        name:"category",
+        component: () => import('../views/category.vue')
+      },
+      {
+        path: "/index",
+        name:"index",
+        component: () => import('../views/index.vue')
+      },
+
+    ]
   },
   {
     path: '/about',
@@ -24,6 +42,18 @@ const routes = [
 
 const router = new VueRouter({
   routes
+})
+
+router.beforeEach((to,from,next)=>{
+  if(!localStorage.getItem('token')){
+     if(to.path=='/login'){
+        next()
+     }else{
+      next('/login')
+     }
+  }else{
+    next()
+  }
 })
 
 export default router

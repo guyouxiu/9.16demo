@@ -1,4 +1,11 @@
-const { defineConfig } = require('@vue/cli-service')
-module.exports = defineConfig({
-  transpileDependencies: true
+
+module.exports = ({
+  devServer:{
+    proxy:{
+      'lejuAdmin':{
+        target:'http://leju.bufan.cloud/',
+        changeorigin:true
+      }
+    }
+  }
 })
